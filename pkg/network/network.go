@@ -14,9 +14,9 @@ import (
 
 // GossipPayload is the data gossiped via memberlist
 type GossipPayload struct {
-	Filename  string
-	IBLTBytes []byte
-	OriginIP  string
+	Filename       string
+	IBLTBytes      []byte
+	OriginIP       string
 	OriginHTTPPort int
 }
 
@@ -38,8 +38,8 @@ func (d *delegate) GetBroadcasts(overhead, limit int) [][]byte {
 	}
 	return nil
 }
-func (d *delegate) LocalState(join bool) []byte                { return nil }
-func (d *delegate) MergeRemoteState(buf []byte, join bool)     {}
+func (d *delegate) LocalState(join bool) []byte            { return nil }
+func (d *delegate) MergeRemoteState(buf []byte, join bool) {}
 
 type Network struct {
 	list     *memberlist.Memberlist
@@ -52,7 +52,7 @@ func NewNetwork(bindPort int, httpPort int, msgCh chan GossipPayload) (*Network,
 	config := memberlist.DefaultLocalConfig()
 	config.BindPort = bindPort
 	config.Name = fmt.Sprintf("node-%d", bindPort)
-	
+
 	del := &delegate{msgCh: msgCh}
 	config.Delegate = del
 
@@ -62,7 +62,7 @@ func NewNetwork(bindPort int, httpPort int, msgCh chan GossipPayload) (*Network,
 	}
 
 	bcast := &memberlist.TransmitLimitedQueue{
-		NumNodes: func() int { return list.NumMembers() },
+		NumNodes:       func() int { return list.NumMembers() },
 		RetransmitMult: 3,
 	}
 	del.queue = bcast
@@ -94,18 +94,18 @@ func (b *broadcastMsg) Finished()                                   {}
 func (n *Network) Broadcast(filename string, ibltBytes []byte) error {
 	ip := n.list.LocalNode().Addr.String()
 	payload := GossipPayload{
-		Filename: filename,
-		IBLTBytes: ibltBytes,
-		OriginIP: ip,
+		Filename:       filename,
+		IBLTBytes:      ibltBytes,
+		OriginIP:       ip,
 		OriginHTTPPort: n.httpPort,
 	}
 	data, err := json.Marshal(payload)
 	if err != nil {
 		return err
 	}
-	
+
 	n.bcast.QueueBroadcast(&broadcastMsg{data: data})
-	
+
 	// Memberlist queue broadcasting needs an explicit send or is sent on ping?
 	// We can directly send to nodes for hackathon reliability.
 	for _, node := range n.list.Members() {

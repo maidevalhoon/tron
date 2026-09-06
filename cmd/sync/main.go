@@ -80,7 +80,7 @@ func main() {
 		if strings.Contains(path, chunker.CacheDir) {
 			return
 		}
-		
+
 		log.Printf("[Event] File changed: %s\n", path)
 		hashes, err := chunker.ChunkFile(path)
 		if err != nil {
@@ -104,9 +104,9 @@ func main() {
 	go func() {
 		for payload := range msgCh {
 			log.Printf("[Gossip Recv] Received IBLT for %s from %s:%d\n", payload.Filename, payload.OriginIP, payload.OriginHTTPPort)
-			
+
 			localHashes := st.GetHashes(payload.Filename)
-			
+
 			diff, err := recon.Compare(localHashes, payload.IBLTBytes)
 			if err != nil {
 				log.Println("Compare error:", err)
@@ -125,13 +125,13 @@ func main() {
 					log.Println("Fetch error:", err)
 					continue
 				}
-				
+
 				// Just save it to cache to simulate receiving it
 				chunkPath := filepath.Join(chunker.CacheDir, fmt.Sprintf("%d", missingHash))
 				os.WriteFile(chunkPath, data, 0644)
 				log.Printf("[Fetch] Successfully downloaded chunk %d (%d bytes).\n", missingHash, len(data))
 			}
-			
+
 			// Note: We don't reconstruct the actual file here without the manifest (hash sequence)
 			// But for the hackathon MVP, fetching the specific 1-byte changed chunk proves O(|Delta|) efficiency!
 		}

@@ -362,7 +362,8 @@ func printAsciiGraph(results []ExperimentResult) {
 	fmt.Println("KEY INSIGHT:")
 	fmt.Println("  • Naive sync sends 100 MB regardless of edit size (O(N) flatline at top).")
 	fmt.Println("  • Our FastCDC + IBLT engine scales strictly with O(|Δ|), transferring ONLY altered chunks!")
-	fmt.Println("=========================================================================================\n")
+	fmt.Println("=========================================================================================")
+	fmt.Println()
 }
 
 func formatBytes(b int64) string {
