@@ -14,10 +14,12 @@ import (
 
 // GossipPayload is the data gossiped via memberlist
 type GossipPayload struct {
-	Filename       string
-	IBLTBytes      []byte
-	OriginIP       string
-	OriginHTTPPort int
+	Filename       string   `json:"filename"`
+	Version        uint64   `json:"version"`
+	IBLTBytes      []byte   `json:"iblt_bytes"`
+	Manifest       []uint64 `json:"manifest,omitempty"`
+	OriginIP       string   `json:"origin_ip"`
+	OriginHTTPPort int      `json:"origin_http_port"`
 }
 
 type delegate struct {
@@ -92,10 +94,16 @@ func (b *broadcastMsg) Message() []byte                             { return b.d
 func (b *broadcastMsg) Finished()                                   {}
 
 func (n *Network) Broadcast(filename string, ibltBytes []byte) error {
+	return n.BroadcastUpdate(filename, 0, ibltBytes, nil)
+}
+
+func (n *Network) BroadcastUpdate(filename string, version uint64, ibltBytes []byte, manifest []uint64) error {
 	ip := n.list.LocalNode().Addr.String()
 	payload := GossipPayload{
 		Filename:       filename,
+		Version:        version,
 		IBLTBytes:      ibltBytes,
+		Manifest:       manifest,
 		OriginIP:       ip,
 		OriginHTTPPort: n.httpPort,
 	}
@@ -106,8 +114,6 @@ func (n *Network) Broadcast(filename string, ibltBytes []byte) error {
 
 	n.bcast.QueueBroadcast(&broadcastMsg{data: data})
 
-	// Memberlist queue broadcasting needs an explicit send or is sent on ping?
-	// We can directly send to nodes for hackathon reliability.
 	for _, node := range n.list.Members() {
 		if node.Name != n.list.LocalNode().Name {
 			_ = n.list.SendReliable(node, data)
@@ -133,7 +139,7 @@ func FetchChunk(ip string, port int, hash uint64) ([]byte, error) {
 	return io.ReadAll(resp.Body)
 }
 
-// StartHTTPServer starts the server for serving chunks.
+// StartHTTPServer starts the server for serving chunks and manifests.
 func StartHTTPServer(port int, getChunk func(uint64) ([]byte, error)) {
 	http.HandleFunc("/chunk/", func(w http.ResponseWriter, r *http.Request) {
 		hashStr := strings.TrimPrefix(r.URL.Path, "/chunk/")

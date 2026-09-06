@@ -1,0 +1,10 @@
+DeltaItems,FixedIBLTBytes,FixedDecodeSuccessRate,AdaptiveIBLTBytes,AdaptiveDecodeSuccessRate,ReconTimeMicros,FallbackEngaged
+0,724,100.0,724,100.0,484,NO
+1,724,100.0,724,100.0,560,NO
+5,724,80.0,964,100.0,501,YES (safeguard)
+10,724,0.0,1924,90.0,724,YES (safeguard)
+20,724,0.0,3844,90.0,1179,YES (safeguard)
+50,724,0.0,9604,90.0,579,YES (safeguard)
+100,724,0.0,19204,100.0,685,YES (safeguard)
+500,724,0.0,96004,100.0,1499,YES (safeguard)
+1000,724,0.0,192004,60.0,1227,YES (safeguard)

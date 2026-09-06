@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="850" height="520" viewBox="0 0 850 520" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="850" height="520" fill="#0f172a" rx="12"/>
+
+  <!-- Title & Subtitle -->
+  <text x="425" y="45" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="bold" fill="#f8fafc" text-anchor="middle">File Size Scalability: 1-Byte Edit Network Cost</text>
+  <text x="425" y="70" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#94a3b8" text-anchor="middle">Comparing Network Bandwidth Required to Sync a 1-Byte Modification Across File Sizes</text>
+
+  <!-- Grid Lines -->
+  <g stroke="#334155" stroke-dasharray="4" stroke-width="1">
+    <line x1="120" y1="110" x2="780" y2="110"/>
+    <line x1="120" y1="190" x2="780" y2="190"/>
+    <line x1="120" y1="270" x2="780" y2="270"/>
+    <line x1="120" y1="350" x2="780" y2="350"/>
+    <line x1="120" y1="430" x2="780" y2="430"/>
+  </g>
+
+  <!-- Axes -->
+  <line x1="120" y1="430" x2="780" y2="430" stroke="#64748b" stroke-width="2"/>
+  <line x1="120" y1="90" x2="120" y2="430" stroke="#64748b" stroke-width="2"/>
+
+  <!-- Y-Axis Labels (Linear Scale for clarity) -->
+  <text x="110" y="115" font-family="monospace" font-size="12" fill="#cbd5e1" text-anchor="end">500 MB</text>
+  <text x="110" y="195" font-family="monospace" font-size="12" fill="#cbd5e1" text-anchor="end">375 MB</text>
+  <text x="110" y="275" font-family="monospace" font-size="12" fill="#cbd5e1" text-anchor="end">250 MB</text>
+  <text x="110" y="355" font-family="monospace" font-size="12" fill="#cbd5e1" text-anchor="end">125 MB</text>
+  <text x="110" y="435" font-family="monospace" font-size="12" fill="#cbd5e1" text-anchor="end">0 MB</text>
+
+  <!-- X-Axis Labels -->
+  <text x="230" y="455" font-family="monospace" font-size="13" font-weight="bold" fill="#cbd5e1" text-anchor="middle">10 MB File</text>
+  <text x="450" y="455" font-family="monospace" font-size="13" font-weight="bold" fill="#cbd5e1" text-anchor="middle">100 MB File</text>
+  <text x="670" y="455" font-family="monospace" font-size="13" font-weight="bold" fill="#cbd5e1" text-anchor="middle">500 MB File</text>
+
+  <!-- Axis Titles -->
+  <text x="450" y="490" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="600" fill="#94a3b8" text-anchor="middle">Baseline File Size</text>
+  <text x="35" y="260" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="600" fill="#94a3b8" text-anchor="middle" transform="rotate(-90 35 260)">Network Bytes Transferred</text>
+
+  <!-- Baseline Bars (Red) -->
+  <!-- 10 MB bar: height = 6.4 px -->
+  <rect x="180" y="423" width="45" height="7" fill="#f43f5e" rx="3"/>
+  <text x="202" y="415" font-family="monospace" font-size="11" fill="#f43f5e" text-anchor="middle">10 MB</text>
+
+  <!-- 100 MB bar: height = 64 px -->
+  <rect x="400" y="366" width="45" height="64" fill="#f43f5e" rx="3"/>
+  <text x="422" y="355" font-family="monospace" font-size="11" fill="#f43f5e" text-anchor="middle">100 MB</text>
+
+  <!-- 500 MB bar: height = 320 px -->
+  <rect x="620" y="110" width="45" height="320" fill="#f43f5e" rx="3"/>
+  <text x="642" y="100" font-family="monospace" font-size="11" fill="#f43f5e" text-anchor="middle">500 MB</text>
+
+  <!-- FastCDC+IBLT Bars (Green: exactly 20.8 KB, 20.8 KB, 20.5 KB -> ~1-2px high flatline at bottom!) -->
+  <rect x="235" y="428" width="45" height="2" fill="#10b981" rx="1"/>
+  <text x="257" y="415" font-family="monospace" font-size="11" font-weight="bold" fill="#34d399" text-anchor="middle">20.8 KB</text>
+
+  <rect x="455" y="428" width="45" height="2" fill="#10b981" rx="1"/>
+  <text x="477" y="415" font-family="monospace" font-size="11" font-weight="bold" fill="#34d399" text-anchor="middle">20.8 KB</text>
+
+  <rect x="675" y="428" width="45" height="2" fill="#10b981" rx="1"/>
+  <text x="697" y="415" font-family="monospace" font-size="11" font-weight="bold" fill="#34d399" text-anchor="middle">20.5 KB</text>
+
+  <!-- Highlight Annotation -->
+  <rect x="180" y="130" width="360" height="90" fill="#1e293b" rx="8" stroke="#38bdf8" stroke-width="1.5"/>
+  <text x="200" y="155" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="bold" fill="#38bdf8">Decoupling File Size from Sync Bandwidth</text>
+  <text x="200" y="177" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" fill="#cbd5e1">• Naive sync scales linearly: 10MB → 100MB → 500MB.</text>
+  <text x="200" y="197" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" fill="#cbd5e1">• Our system remains invariant: strictly ~20 KB (99.996% savings!).</text>
+</svg>

@@ -1,0 +1,7 @@
+Scenario,FaultSimulated,ObservedBehavior,RecoveredState,HashVerified,FinalStatus
+1. Node crash before sync,Sender process killed prior to gossip broadcast,Receiver state preserved; catches up seamlessly on reboot,Version 1 applied after sender restarted,true,PASSED
+2. Crash during chunk download,Sender drops TCP connection midway through HTTP transfer,Receiver retry logic recovers chunk on subsequent attempt,Chunk retrieved & validated,true,PASSED
+3. Temporary network interruption,Transient network timeout dropping UDP packets,Push/pull state sync & memberlist reliable retry kicks in,Full state converged once route restored,true,PASSED
+4. Node rejoins after offline gap,Node disconnected while versions 2 and 3 progressed,Jumped directly to v4 without processing obsolete deltas,Synced to v4 with 4 chunks,true,PASSED
+5. Duplicate gossip updates,Gossip packet received 10x due to multi-hop amplification,First packet accepted; 9 subsequent identical versions dropped,Version 3 preserved cleanly,true,PASSED
+6. Concurrent split-brain updates,Two nodes make independent changes to version 1,Higher version accepted; equal version rejected idempotently,Node does not corrupt local chunk manifest,true,PASSED

@@ -1,0 +1,6 @@
+MutationScenario,FastCDCTotalChunks,FastCDCReusableChunks,FastCDCReuseRatioPct,FixedTotalChunks,FixedReusableChunks,FixedReuseRatioPct,Advantage
+1. In-place modify (100 bytes at 5MB),541,540,99.82,640,639,99.84,1.0x better
+2. Insert 100 bytes near BEGINNING (byte 1000),541,540,99.82,641,0,0.00,Infinity (100% vs 0%)
+3. Insert 100 bytes in MIDDLE (at 5MB),541,540,99.82,641,320,49.92,2.0x better
+4. Delete 100 bytes near BEGINNING (byte 1000),541,540,99.82,640,0,0.00,Infinity (100% vs 0%)
+5. Delete 100 bytes in MIDDLE (at 5MB),541,540,99.82,640,320,50.00,2.0x better

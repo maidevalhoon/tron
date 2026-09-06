@@ -32,6 +32,7 @@ go.work.sum
 # .vscode/
 
 # Build & Sync artifacts
+bin/
 sync-node
 sync-experiment
 .sync_cache/

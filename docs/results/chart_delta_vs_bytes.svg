@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="850" height="520" viewBox="0 0 850 520" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="850" height="520" fill="#0f172a" rx="12"/>
+  
+  <!-- Title & Subtitle -->
+  <text x="425" y="45" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="bold" fill="#f8fafc" text-anchor="middle">Amount Changed (Δ) vs. Network Bytes Transferred</text>
+  <text x="425" y="70" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#94a3b8" text-anchor="middle">Empirical 100 MB Baseline File: FastCDC + IBLT vs. Full Re-transfer Baseline</text>
+
+  <!-- Grid Lines -->
+  <g stroke="#334155" stroke-dasharray="4" stroke-width="1">
+    <line x1="120" y1="110" x2="780" y2="110"/>
+    <line x1="120" y1="180" x2="780" y2="180"/>
+    <line x1="120" y1="250" x2="780" y2="250"/>
+    <line x1="120" y1="320" x2="780" y2="320"/>
+    <line x1="120" y1="390" x2="780" y2="390"/>
+    <line x1="120" y1="440" x2="780" y2="440"/>
+  </g>
+
+  <!-- Axes -->
+  <line x1="120" y1="440" x2="780" y2="440" stroke="#64748b" stroke-width="2"/>
+  <line x1="120" y1="100" x2="120" y2="440" stroke="#64748b" stroke-width="2"/>
+
+  <!-- Y-Axis Labels (Logarithmic scale) -->
+  <text x="110" y="115" font-family="monospace" font-size="12" fill="#cbd5e1" text-anchor="end">100 MB</text>
+  <text x="110" y="185" font-family="monospace" font-size="12" fill="#cbd5e1" text-anchor="end">10 MB</text>
+  <text x="110" y="255" font-family="monospace" font-size="12" fill="#cbd5e1" text-anchor="end">1 MB</text>
+  <text x="110" y="325" font-family="monospace" font-size="12" fill="#cbd5e1" text-anchor="end">100 KB</text>
+  <text x="110" y="395" font-family="monospace" font-size="12" fill="#cbd5e1" text-anchor="end">10 KB</text>
+  <text x="110" y="445" font-family="monospace" font-size="12" fill="#cbd5e1" text-anchor="end">1 KB</text>
+
+  <!-- X-Axis Labels -->
+  <text x="160" y="465" font-family="monospace" font-size="11" fill="#cbd5e1" text-anchor="middle">1 Byte</text>
+  <text x="255" y="465" font-family="monospace" font-size="11" fill="#cbd5e1" text-anchor="middle">10 Bytes</text>
+  <text x="350" y="465" font-family="monospace" font-size="11" fill="#cbd5e1" text-anchor="middle">1 KB</text>
+  <text x="445" y="465" font-family="monospace" font-size="11" fill="#cbd5e1" text-anchor="middle">100 KB</text>
+  <text x="540" y="465" font-family="monospace" font-size="11" fill="#cbd5e1" text-anchor="middle">1 MB</text>
+  <text x="635" y="465" font-family="monospace" font-size="11" fill="#cbd5e1" text-anchor="middle">10 MB</text>
+  <text x="730" y="465" font-family="monospace" font-size="11" fill="#cbd5e1" text-anchor="middle">50 MB</text>
+
+  <!-- Axis Titles -->
+  <text x="450" y="498" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="600" fill="#94a3b8" text-anchor="middle">Mutation Delta Size (Δ)</text>
+  <text x="35" y="270" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="600" fill="#94a3b8" text-anchor="middle" transform="rotate(-90 35 270)">Transferred Network Bytes (Log Scale)</text>
+
+  <!-- Baseline Line (Flat 100 MB = 104,857,600 Bytes) -->
+  <line x1="160" y1="110" x2="730" y2="110" stroke="#f43f5e" stroke-width="3" stroke-dasharray="6"/>
+  <circle cx="160" cy="110" r="5" fill="#f43f5e"/>
+  <circle cx="255" cy="110" r="5" fill="#f43f5e"/>
+  <circle cx="350" cy="110" r="5" fill="#f43f5e"/>
+  <circle cx="445" cy="110" r="5" fill="#f43f5e"/>
+  <circle cx="540" cy="110" r="5" fill="#f43f5e"/>
+  <circle cx="635" cy="110" r="5" fill="#f43f5e"/>
+  <circle cx="730" cy="110" r="5" fill="#f43f5e"/>
+
+  <!-- System Curve: FastCDC + IBLT (Empirical Data Points)
+       1 B    -> 32.71 KB  (~y=365)
+       10 B   -> 32.71 KB  (~y=365)
+       1 KB   -> 32.71 KB  (~y=365)
+       100 KB -> 128.75 KB (~y=310)
+       1 MB   -> 1.01 MB   (~y=248)
+       10 MB  -> 10.06 MB  (~y=179)
+       50 MB  -> 50.29 MB  (~y=132)
+  -->
+  <polyline points="160,365 255,365 350,365 445,310 540,248 635,179 730,132"
+            fill="none" stroke="#10b981" stroke-width="4"/>
+
+  <!-- System Data Points & Badges -->
+  <circle cx="160" cy="365" r="6" fill="#10b981" stroke="#0f172a" stroke-width="2"/>
+  <text x="160" y="350" font-family="monospace" font-size="10" font-weight="bold" fill="#34d399" text-anchor="middle">32.7 KB (-99.97%)</text>
+
+  <circle cx="255" cy="365" r="6" fill="#10b981" stroke="#0f172a" stroke-width="2"/>
+  <circle cx="350" cy="365" r="6" fill="#10b981" stroke="#0f172a" stroke-width="2"/>
+
+  <circle cx="445" cy="310" r="6" fill="#10b981" stroke="#0f172a" stroke-width="2"/>
+  <text x="445" y="295" font-family="monospace" font-size="10" font-weight="bold" fill="#34d399" text-anchor="middle">128.8 KB (-99.87%)</text>
+
+  <circle cx="540" cy="248" r="6" fill="#10b981" stroke="#0f172a" stroke-width="2"/>
+  <circle cx="635" cy="179" r="6" fill="#10b981" stroke="#0f172a" stroke-width="2"/>
+  <text x="635" y="165" font-family="monospace" font-size="10" font-weight="bold" fill="#34d399" text-anchor="middle">10.06 MB (-89.9%)</text>
+
+  <circle cx="730" cy="132" r="6" fill="#10b981" stroke="#0f172a" stroke-width="2"/>
+
+  <!-- Legend -->
+  <rect x="520" y="80" width="250" height="60" fill="#1e293b" rx="6" stroke="#475569" stroke-width="1"/>
+  <line x1="535" y1="98" x2="565" y2="98" stroke="#f43f5e" stroke-width="3" stroke-dasharray="4"/>
+  <text x="575" y="102" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" fill="#f8fafc">Naive Re-transfer (O(N))</text>
+
+  <line x1="535" y1="122" x2="565" y2="122" stroke="#10b981" stroke-width="3"/>
+  <text x="575" y="126" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" fill="#f8fafc">Our System: FastCDC+IBLT (O(|Δ|))</text>
+</svg>

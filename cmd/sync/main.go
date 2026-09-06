@@ -88,13 +88,14 @@ func main() {
 			return
 		}
 
-		diffCount := st.UpdateHashes(path, hashes)
+		rec, diffCount := st.Bump(path, hashes)
 
 		ibltTable := recon.BuildTableWithCapacity(hashes, diffCount)
 		ibltBytes := ibltTable.ToBytes()
 
-		log.Printf("[Gossip] Broadcasting IBLT for %s (chunks: %d, diffCount: %d, size: %d bytes)\n", path, len(hashes), diffCount, len(ibltBytes))
-		if err := net.Broadcast(path, ibltBytes); err != nil {
+		log.Printf("[Gossip] Broadcasting update for %s (version: %d, chunks: %d, diffCount: %d, iblt: %d bytes)\n",
+			path, rec.Version, len(hashes), diffCount, len(ibltBytes))
+		if err := net.BroadcastUpdate(path, rec.Version, ibltBytes, hashes); err != nil {
 			log.Println("Broadcast error:", err)
 		}
 	})
@@ -103,7 +104,13 @@ func main() {
 
 	go func() {
 		for payload := range msgCh {
-			log.Printf("[Gossip Recv] Received IBLT for %s from %s:%d\n", payload.Filename, payload.OriginIP, payload.OriginHTTPPort)
+			log.Printf("[Gossip Recv] Received update for %s (version %d) from %s:%d\n",
+				payload.Filename, payload.Version, payload.OriginIP, payload.OriginHTTPPort)
+
+			if !st.ShouldAccept(payload.Filename, payload.Version) {
+				log.Printf("[Sync] Ignoring stale/duplicate version %d for %s\n", payload.Version, payload.Filename)
+				continue
+			}
 
 			localHashes := st.GetHashes(payload.Filename)
 
@@ -113,12 +120,23 @@ func main() {
 				continue
 			}
 
-			if len(diff.Missing) == 0 {
-				log.Println("[Sync] No missing chunks.")
-				continue
+			// Determine missing chunks (with manifest fallback if IBLT decoding fails)
+			missingChunks := diff.Missing
+			if !diff.Success && len(payload.Manifest) > 0 {
+				log.Println("[Sync] IBLT decode incomplete, falling back to manifest comparison")
+				localSet := make(map[uint64]bool, len(localHashes))
+				for _, h := range localHashes {
+					localSet[h] = true
+				}
+				missingChunks = nil
+				for _, h := range payload.Manifest {
+					if !localSet[h] {
+						missingChunks = append(missingChunks, h)
+					}
+				}
 			}
 
-			for _, missingHash := range diff.Missing {
+			for _, missingHash := range missingChunks {
 				log.Printf("[Fetch] Need chunk %d. Downloading from %s:%d...\n", missingHash, payload.OriginIP, payload.OriginHTTPPort)
 				data, err := network.FetchChunk(payload.OriginIP, payload.OriginHTTPPort, missingHash)
 				if err != nil {
@@ -126,14 +144,26 @@ func main() {
 					continue
 				}
 
-				// Just save it to cache to simulate receiving it
-				chunkPath := filepath.Join(chunker.CacheDir, fmt.Sprintf("%d", missingHash))
-				os.WriteFile(chunkPath, data, 0644)
+				if err := chunker.SaveChunk(missingHash, data); err != nil {
+					log.Println("SaveChunk error:", err)
+				}
 				log.Printf("[Fetch] Successfully downloaded chunk %d (%d bytes).\n", missingHash, len(data))
 			}
 
-			// Note: We don't reconstruct the actual file here without the manifest (hash sequence)
-			// But for the hackathon MVP, fetching the specific 1-byte changed chunk proves O(|Delta|) efficiency!
+			// If manifest is provided, reassemble the file into place
+			if len(payload.Manifest) > 0 {
+				destFile := filepath.Join(absWatchDir, filepath.Base(payload.Filename))
+				if err := chunker.ReassembleFile(payload.Manifest, destFile); err != nil {
+					log.Printf("[Reassemble Error] %v\n", err)
+				} else {
+					log.Printf("[Reassemble] File %s synchronized successfully (version %d).\n", destFile, payload.Version)
+					st.SetRecord(state.FileRecord{
+						Path:    payload.Filename,
+						Version: payload.Version,
+						Chunks:  payload.Manifest,
+					})
+				}
+			}
 		}
 	}()
 
