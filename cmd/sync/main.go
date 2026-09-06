@@ -88,12 +88,12 @@ func main() {
 			return
 		}
 
-		st.SetHashes(path, hashes)
+		diffCount := st.UpdateHashes(path, hashes)
 
-		ibltTable := recon.BuildTable(hashes)
+		ibltTable := recon.BuildTableWithCapacity(hashes, diffCount)
 		ibltBytes := ibltTable.ToBytes()
 
-		log.Printf("[Gossip] Broadcasting IBLT for %s (size: %d bytes)\n", path, len(ibltBytes))
+		log.Printf("[Gossip] Broadcasting IBLT for %s (chunks: %d, diffCount: %d, size: %d bytes)\n", path, len(hashes), diffCount, len(ibltBytes))
 		if err := net.Broadcast(path, ibltBytes); err != nil {
 			log.Println("Broadcast error:", err)
 		}

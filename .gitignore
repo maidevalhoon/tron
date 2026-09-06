@@ -33,6 +33,7 @@ go.work.sum
 
 # Build & Sync artifacts
 sync-node
+sync-experiment
 .sync_cache/
 *.log
 node1_dir/

@@ -51,16 +51,32 @@ func (cw *chunkWriter) Write(p []byte) (n int, err error) {
 
 	cw.hashes = append(cw.hashes, hash)
 
-	// Save chunk to disk
+	// Save chunk to disk only if not already cached
 	chunkPath := filepath.Join(CacheDir, strconv.FormatUint(hash, 10))
 	if _, err := os.Stat(chunkPath); os.IsNotExist(err) {
-		err = os.WriteFile(chunkPath, p, 0644)
-		if err != nil {
-			return 0, err
+		// Write to temp file then rename for atomic write
+		tmpPath := chunkPath + ".tmp"
+		if err := os.WriteFile(tmpPath, p, 0644); err == nil {
+			_ = os.Rename(tmpPath, chunkPath)
 		}
 	}
 
 	return len(p), nil
+}
+
+// SaveChunk saves a chunk data to cache with given hash.
+func SaveChunk(hash uint64, data []byte) error {
+	if err := os.MkdirAll(CacheDir, 0755); err != nil {
+		return err
+	}
+	chunkPath := filepath.Join(CacheDir, strconv.FormatUint(hash, 10))
+	if _, err := os.Stat(chunkPath); os.IsNotExist(err) {
+		tmpPath := chunkPath + ".tmp"
+		if err := os.WriteFile(tmpPath, data, 0644); err == nil {
+			return os.Rename(tmpPath, chunkPath)
+		}
+	}
+	return nil
 }
 
 // GetChunk returns the contents of a chunk given its hash.

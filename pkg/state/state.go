@@ -28,3 +28,25 @@ func (s *Store) SetHashes(filepath string, hashes []uint64) {
 	defer s.Unlock()
 	s.files[filepath] = hashes
 }
+
+// UpdateHashes updates the stored hashes and returns the number of newly introduced chunk hashes.
+func (s *Store) UpdateHashes(filepath string, newHashes []uint64) int {
+	s.Lock()
+	defer s.Unlock()
+
+	oldHashes := s.files[filepath]
+	oldSet := make(map[uint64]bool, len(oldHashes))
+	for _, h := range oldHashes {
+		oldSet[h] = true
+	}
+
+	diffCount := 0
+	for _, h := range newHashes {
+		if !oldSet[h] {
+			diffCount++
+		}
+	}
+
+	s.files[filepath] = newHashes
+	return diffCount
+}
