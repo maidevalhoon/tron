@@ -1,4 +1,4 @@
-.PHONY: all build test bench bench-cdc bench-iblt bench-bandwidth bench-scalability bench-failures charts fmt clean help
+.PHONY: all build test bench bench-cdc bench-iblt bench-bandwidth bench-scalability bench-failures charts fmt clean help demo demo-wow
 
 # Default target
 all: fmt test build
@@ -7,6 +7,8 @@ help:
 	@echo "TRON Build and Benchmark Targets:"
 	@echo "  make build             - Compile main sync daemon binary"
 	@echo "  make test              - Run all unit and correctness test suites"
+	@echo "  make demo              - Run all 4 presentation demos (WOW, Scale, Failure, FastCDC)"
+	@echo "  make demo-wow          - Run the 100MB 1-byte WOW demo (99.98% bandwidth reduction)"
 	@echo "  make bench             - Run all validation benchmarks and generate CSVs"
 	@echo "  make bench-cdc         - Validate FastCDC vs Fixed Chunking"
 	@echo "  make bench-iblt        - Validate IBLT peeling and capacity limits"
@@ -16,6 +18,12 @@ help:
 	@echo "  make charts            - Generate SVG benchmark charts in docs/results/"
 	@echo "  make fmt               - Run go fmt across all packages"
 	@echo "  make clean             - Clean temporary artifacts and cache"
+
+demo:
+	./run_demo.sh all
+
+demo-wow:
+	./run_demo.sh wow
 
 build:
 	@mkdir -p bin

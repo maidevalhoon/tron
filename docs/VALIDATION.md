@@ -108,26 +108,28 @@ Tested on 10 MB, 100 MB, and 500 MB baseline files across 6 delta sizes.
 
 ### Empirical Bandwidth Results
 
-| File Size | Delta Size ($\Delta$) | Baseline Bytes | Our System Sent | Our System Recv | Chunks Transferred | Sync Latency | Bandwidth Saving |
-| :--- | :--- | :--- | :--- | :--- | :---: | :---: | :---: |
-| **10 MB** | 1 byte | 10.00 MB | 20.27 KB | 20.27 KB | 1 | 21 ms | **99.80%** |
-| 10 MB | 10 bytes | 10.00 MB | 20.27 KB | 20.27 KB | 1 | 23 ms | **99.80%** |
-| 10 MB | 1 KB | 10.00 MB | 20.27 KB | 20.27 KB | 1 | 25 ms | **99.80%** |
-| 10 MB | 100 KB | 10.00 MB | 120.30 KB | 120.30 KB | 6 | 28 ms | **98.83%** |
-| 10 MB | 1 MB | 10.00 MB | 1.03 MB | 1.03 MB | 56 | 41 ms | **89.73%** |
-| 10 MB | 10 MB | 10.00 MB | 5.06 MB | 5.06 MB | 275 | 99 ms | **49.45%** |
-| **100 MB** | 1 byte | 100.00 MB | 20.30 KB | 20.30 KB | 1 | 212 ms | **99.98%** |
-| 100 MB | 10 bytes | 100.00 MB | 20.30 KB | 20.30 KB | 1 | 202 ms | **99.98%** |
-| 100 MB | 1 KB | 100.00 MB | 20.30 KB | 20.30 KB | 1 | 172 ms | **99.98%** |
-| 100 MB | 100 KB | 100.00 MB | 123.79 KB | 123.79 KB | 6 | 184 ms | **99.88%** |
-| 100 MB | 1 MB | 100.00 MB | 1.02 MB | 1.02 MB | 53 | 213 ms | **98.98%** |
-| 100 MB | 10 MB | 100.00 MB | 10.13 MB | 10.13 MB | 541 | 319 ms | **89.87%** |
-| **500 MB** | 1 byte | 500.00 MB | 20.03 KB | 20.03 KB | 1 | 1.16 s | **99.996%** |
-| 500 MB | 10 bytes | 500.00 MB | 20.03 KB | 20.03 KB | 1 | 873 ms | **99.996%** |
-| 500 MB | 1 KB | 500.00 MB | 20.03 KB | 20.03 KB | 1 | 1.21 s | **99.996%** |
-| 500 MB | 100 KB | 500.00 MB | 239.83 KB | 239.83 KB | 13 | 1.60 s | **99.95%** |
-| 500 MB | 1 MB | 500.00 MB | 1.05 MB | 1.05 MB | 55 | 1.38 s | **99.79%** |
-| 500 MB | 10 MB | 500.00 MB | 10.21 MB | 10.21 MB | 549 | 997 ms | **97.96%** |
+| File Size | Delta Size ($\Delta$) | Baseline Bytes | Our System Sent | Our System Recv | Chunks Transferred | Sync Latency | RAM Usage | Bandwidth Saving |
+| :--- | :--- | :--- | :--- | :--- | :---: | :---: | :---: | :---: |
+| **10 MB** | 1 byte | 10.00 MB | 20.39 KB | 20.39 KB | 1 | 23 ms | 0.69 MB | **99.80%** |
+| 10 MB | 10 bytes | 10.00 MB | 20.39 KB | 20.39 KB | 1 | 32 ms | 2.09 MB | **99.80%** |
+| 10 MB | 1 KB | 10.00 MB | 97.81 KB | 97.81 KB | 5 | 47 ms | 0.82 MB | **99.04%** |
+| 10 MB | 100 KB | 10.00 MB | 184.02 KB | 184.02 KB | 10 | 48 ms | 0.83 MB | **98.20%** |
+| 10 MB | 1 MB | 10.00 MB | 1.05 MB | 1.05 MB | 58 | 61 ms | 0.52 MB | **89.55%** |
+| 10 MB | 10 MB | 10.00 MB | 5.07 MB | 5.07 MB | 275 | 144 ms | 1.92 MB | **49.31%** |
+| **100 MB** | 1 byte | 100.00 MB | 17.79 KB | 17.79 KB | 1 | 290 ms | 0.70 MB | **99.98%** |
+| 100 MB | 10 bytes | 100.00 MB | 17.79 KB | 17.79 KB | 1 | 232 ms | 1.63 MB | **99.98%** |
+| 100 MB | 1 KB | 100.00 MB | 17.79 KB | 17.79 KB | 1 | 267 ms | 2.51 MB | **99.98%** |
+| 100 MB | 100 KB | 100.00 MB | 209.38 KB | 209.38 KB | 12 | 274 ms | 1.42 MB | **99.80%** |
+| 100 MB | 1 MB | 100.00 MB | 1.04 MB | 1.04 MB | 55 | 238 ms | 1.28 MB | **98.96%** |
+| 100 MB | 10 MB | 100.00 MB | 10.16 MB | 10.16 MB | 540 | 523 ms | 1.41 MB | **89.84%** |
+| 100 MB | 50 MB | 100.00 MB | 50.51 MB | 50.51 MB | 2,702 | 1.30 s | 1.04 MB | **49.49%** |
+| **500 MB** | 1 byte | 500.00 MB | 12.57 KB | 12.57 KB | 1 | 1.54 s | 2.97 MB | **99.997%** |
+| 500 MB | 10 bytes | 500.00 MB | 12.57 KB | 12.57 KB | 1 | 1.17 s | 1.80 MB | **99.997%** |
+| 500 MB | 1 KB | 500.00 MB | 12.57 KB | 12.57 KB | 1 | 1.16 s | 1.28 MB | **99.997%** |
+| 500 MB | 100 KB | 500.00 MB | 137.81 KB | 137.81 KB | 7 | 953 ms | 1.70 MB | **99.97%** |
+| 500 MB | 1 MB | 500.00 MB | 1.05 MB | 1.05 MB | 57 | 985 ms | 1.33 MB | **99.79%** |
+| 500 MB | 10 MB | 500.00 MB | 10.16 MB | 10.16 MB | 550 | 1.28 s | 1.84 MB | **97.97%** |
+| 500 MB | 50 MB | 500.00 MB | 50.51 MB | 50.51 MB | 2,703 | 2.05 s | 2.38 MB | **89.90%** |
 
 ### Benchmark Graphs
 - **Delta vs. Bytes:** [`docs/results/chart_delta_vs_bytes.svg`](file:///home/linux/github/tron/docs/results/chart_delta_vs_bytes.svg)

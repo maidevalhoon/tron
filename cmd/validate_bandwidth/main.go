@@ -10,6 +10,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"sync/atomic"
@@ -53,6 +54,7 @@ func main() {
 		{"100 KB", 100 * 1024},
 		{"1 MB", 1 * 1024 * 1024},
 		{"10 MB", 10 * 1024 * 1024},
+		{"50 MB", 50 * 1024 * 1024},
 	}
 
 	tmpDir, err := os.MkdirTemp("", "bandwidth_bench_*")
@@ -83,14 +85,15 @@ func main() {
 		"ReconPayloadBytes",
 		"BandwidthSavingPct",
 		"LatencyMs",
+		"MemoryAllocMB",
 	})
 
-	fmt.Println("=========================================================================================================================================")
-	fmt.Println("                                           CROSS-FILE-SIZE BANDWIDTH BENCHMARK (10MB - 500MB)                                            ")
-	fmt.Println("=========================================================================================================================================")
-	fmt.Printf("%-10s | %-10s | %-12s | %-12s | %-12s | %-12s | %-10s | %-10s\n",
-		"File Size", "Delta (Δ)", "Baseline", "System Sent", "System Recv", "Chunks Xfer", "Latency", "Saving %")
-	fmt.Println("-----------------------------------------------------------------------------------------------------------------------------------------")
+	fmt.Println("=========================================================================================================================================================")
+	fmt.Println("                                                    CROSS-FILE-SIZE BANDWIDTH BENCHMARK (10MB - 500MB)                                                   ")
+	fmt.Println("=========================================================================================================================================================")
+	fmt.Printf("%-10s | %-10s | %-12s | %-12s | %-12s | %-12s | %-10s | %-10s | %-10s\n",
+		"File Size", "Delta (Δ)", "Baseline", "System Sent", "System Recv", "Chunks Xfer", "Latency", "RAM (MB)", "Saving %")
+	fmt.Println("---------------------------------------------------------------------------------------------------------------------------------------------------------")
 
 	for _, fs := range fileSizes {
 		baseFile := filepath.Join(tmpDir, fmt.Sprintf("base_%s.bin", strings.ReplaceAll(fs.label, " ", "")))
@@ -176,11 +179,15 @@ func main() {
 			server.Close()
 			os.Remove(modFile)
 
+			var m runtime.MemStats
+			runtime.ReadMemStats(&m)
+			allocMB := float64(m.Alloc) / (1024 * 1024)
+
 			totalSent := bytesSent.Load()
 			totalRecv := bytesReceived.Load()
 			saving := 100.0 * (1.0 - (float64(totalSent) / float64(fs.bytes)))
 
-			fmt.Printf("%-10s | %-10s | %-12s | %-12s | %-12s | %-12d | %-10v | %6.2f%%\n",
+			fmt.Printf("%-10s | %-10s | %-12s | %-12s | %-12s | %-12d | %-10v | %-10.2f | %6.2f%%\n",
 				fs.label,
 				dt.label,
 				formatBytes(fs.bytes),
@@ -188,6 +195,7 @@ func main() {
 				formatBytes(totalRecv),
 				chunksXfer,
 				syncLatency.Round(time.Millisecond),
+				allocMB,
 				saving,
 			)
 
@@ -203,11 +211,12 @@ func main() {
 				fmt.Sprintf("%d", reconSize),
 				fmt.Sprintf("%.2f", saving),
 				fmt.Sprintf("%d", syncLatency.Milliseconds()),
+				fmt.Sprintf("%.2f", allocMB),
 			})
 		}
 		os.Remove(baseFile)
 	}
-	fmt.Println("=========================================================================================================================================\n")
+	fmt.Println("=========================================================================================================================================================\n")
 }
 
 func generateFile(path string, size int64) {
